@@ -1,6 +1,5 @@
-from typing import List
-
 from fastapi import FastAPI, UploadFile, File
+from typing import List
 
 app = FastAPI()
 
@@ -10,7 +9,7 @@ def read_root():
 
 @app.post("/upload")
 async def upload_images(files: List[UploadFile] = File(...)):
-    return {
-        "filename": files.filename,
-        "content_type": files.content_type
-    }
+    return [
+        {"filename": file.filename, "content_type": file.content_type}
+        for file in files
+    ]
