@@ -6,7 +6,7 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
-      - uploads_data/app/uploads
+      - uploads_data:/app/uploads
     env_file:
       - .env
     depends_on:
@@ -24,3 +24,6 @@ services:
     image: redis:8
     ports:
       - "6379:6379"
+
+volumes:
+  uploads_data:
