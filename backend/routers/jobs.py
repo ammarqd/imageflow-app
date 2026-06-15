@@ -1,15 +1,23 @@
 import os
 import uuid
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
+from fastapi.concurrency import run_in_threadpool
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from models import Job
+from schemas import JobOut
+from tasks import process_image
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
 UPLOAD_DIR = "/app/uploads"
 
-@router.post("/upload")
+def save_file_sync(file_contents: bytes, destination: str):
+    with open(destination, "wb") as f:
+        f.write(file_contents)
+
+@router.post("/upload", response_model=list[JobOut])
 async def upload_images(
     files: list[UploadFile] = File(...),
     db: AsyncSession = Depends(get_db)
@@ -22,14 +30,20 @@ async def upload_images(
         file_path = os.path.join(UPLOAD_DIR, unique_filename)
 
         contents = await file.read()
-        with open(file_path, "wb") as f:
-            f.write(contents)
+        await run_in_threadpool(save_file_sync, contents, file_path)
 
-        job = Job(filename=file.filename, status="pending")
+        job = Job(
+            original_filename=file.filename,
+            stored_filename=unique_filename,
+            status="pending"
+        )
+
         db.add(job)
         await db.commit()
         await db.refresh(job)
 
-        created_jobs.append({"job_id": job.id, "filename": file.filename})
+        process_image.delay(job.id)
+
+        created_jobs.append(job)
 
     return created_jobs
