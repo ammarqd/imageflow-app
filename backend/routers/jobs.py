@@ -2,7 +2,6 @@ import os
 import uuid
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
 from fastapi.concurrency import run_in_threadpool
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from database import get_db
 from models import Job
@@ -47,3 +46,17 @@ async def upload_images(
         created_jobs.append(job)
 
     return created_jobs
+
+@router.get("/{job_id}", response_model=JobOut)
+async def get_job_status(
+    job_id : int,
+    db : AsyncSession = Depends(get_db)
+):
+    job = await db.get(Job, job_id)
+    if not job:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Job with ID {job_id} not found"
+        )
+    
+    return job
