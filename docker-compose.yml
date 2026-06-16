@@ -1,45 +1,41 @@
 services:
   api:
-    build: .
+    build: ./backend
     image: transformation-api
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - ./backend:/app
       - uploads_data:/app/uploads
       - outputs_data:/app/outputs
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       - db
       - redis
-
   celery_worker:
-    build: .
+    build: ./backend
     image: transformation-api
     command: celery -A celery_app worker --loglevel=info
     volumes:
-      - .:/app
+      - ./backend:/app
       - uploads_data:/app/uploads
       - outputs_data:/app/outputs
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       - db
       - redis
-
   db:
     image: postgres:18
     env_file:
-      - .env
+      - ./backend/.env
     ports:
       - "5432:5432"
-
   redis:
     image: redis:8
     ports:
       - "6379:6379"
-
 volumes:
   uploads_data:
   outputs_data:
