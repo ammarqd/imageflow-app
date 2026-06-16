@@ -7,6 +7,7 @@ celery_app = Celery(
     "image_tasks",
     broker=REDIS_URL,
     backend=REDIS_URL,
+    include=["tasks"],
 )
 
 celery_app.conf.update(
