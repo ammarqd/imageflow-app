@@ -1,9 +1,10 @@
 import os
-from celery_app import celery_app
-from database import SyncSessionLocal
-from models import Job
+
 from PIL import Image
 
+from celery_app import celery_app
+from database_sync import SyncSessionLocal
+from models import Job
 OUTPUT_DIR = "/app/outputs"
 
 @celery_app.task
