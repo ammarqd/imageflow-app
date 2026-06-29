@@ -1,0 +1,22 @@
+[project]
+name = "imageflow"
+version = "0.1.0"
+requires-python = ">=3.14"
+
+[dependency-groups]
+shared = [
+    "celery[redis]",
+    "sqlalchemy[asyncio]",
+]
+api = [
+    {include-group = "shared"},
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "asyncpg",
+]
+worker = [
+    {include-group = "shared"},
+    "psycopg2-binary",
+    "pillow",
+]

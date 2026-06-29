@@ -1,8 +1,0 @@
-fastapi
-uvicorn
-python-multipart
-sqlalchemy[asyncio]
-asyncpg
-celery[redis]
-pillow
-psycopg2-binary
