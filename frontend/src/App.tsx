@@ -1,10 +1,10 @@
-function App() {
+export default function App() {
   return (
-    <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold text-emerald-400">ImageFlow</h1>
-      <p className="mt-2 text-slate-400">Distributed Image Processing Dashboard</p>
+    <div className="h-screen bg-[#111112] text-zinc-200 flex flex-col">
+      <header className="h-12 border-b border-white/[0.06] flex items-center px-6 shrink-0">
+        <span className="text-sm font-semibold tracking-tight text-white/90">ImageFlow</span>
+      </header>
+      <main className="flex-1 p-6" />
     </div>
   )
 }
-
-export default App
