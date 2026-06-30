@@ -5,8 +5,9 @@ from pydantic import BaseModel
 class JobOut(BaseModel):
     id: int
     original_filename: str
+    stored_filename: str
     status: str
-    output_path: str | None
+    output_filename: str | None
     created_at: datetime
 
     model_config = {"from_attributes": True}
