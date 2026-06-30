@@ -1,9 +1,11 @@
 import os
 import shutil
 import uuid
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException, status
+
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from celery_app import celery_app
@@ -47,7 +49,13 @@ async def upload_images(
     return jobs
 
 
-        created_jobs.append(job)
+@router.get("", response_model=list[JobOut])
+async def get_jobs(
+    ids: list[int] = Query(...),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(select(Job).where(Job.id.in_(ids)))
+    return result.scalars().all()
 
 
 @router.get("/{job_id}", response_model=JobOut)
