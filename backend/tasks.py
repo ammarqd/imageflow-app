@@ -25,12 +25,23 @@ def process_image(job_id: int):
 
         try:
             with Image.open(input_path) as img:
-                img.save(output_path, "WEBP")
+                img.save(
+                    output_path,
+                    "WEBP",
+                    quality=85,
+                    method=0
+                )
         except Exception as e:
             job.status = "failed"
             db.commit()
-            raise e
+            raise
 
         job.status = "completed"
-        job.output_path = output_path
+        job.output_filename = output_filename
         db.commit()
+
+        return {
+            "job_id": job_id,
+            "output_filename": output_filename,
+            "status": job.status,
+        }
