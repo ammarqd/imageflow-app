@@ -1,11 +1,15 @@
 services:
   api:
-    build: ./backend
-    image: transformation-api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: api
+    image: imageflow-api
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - /app/.venv
       - uploads_data:/app/uploads
       - outputs_data:/app/outputs
     env_file:
@@ -14,11 +18,15 @@ services:
       - db
       - redis
   celery_worker:
-    build: ./backend
-    image: transformation-api
     command: celery -A celery_app worker --loglevel=info
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: worker
+    image: imageflow-worker
     volumes:
       - ./backend:/app
+      - /app/.venv
       - uploads_data:/app/uploads
       - outputs_data:/app/outputs
     env_file:
