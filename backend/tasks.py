@@ -25,6 +25,7 @@ def process_image(job_id: int):
 
         try:
             with Image.open(input_path) as img:
+                job.width, job.height = img.size
                 img.save(
                     output_path,
                     "WEBP",

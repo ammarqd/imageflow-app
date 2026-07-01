@@ -8,6 +8,8 @@ class JobOut(BaseModel):
     stored_filename: str
     status: str
     output_filename: str | None
+    width: int | None
+    height: int | None
     created_at: datetime
 
     model_config = {"from_attributes": True}
