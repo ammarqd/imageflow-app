@@ -4,11 +4,11 @@ A distributed, asynchronous image processing pipeline built with FastAPI, Celery
 
 ## ✨ Features
 
-* Batch image upload with asynchronous processing via Celery and Redis
-* WebP conversion using Pillow with job lifecycle tracking (`pending → processing → completed → failed`)
+* Batch image uploads with asynchronous processing via Celery and Redis
+* WebP conversion using Pillow as a decoupled Celery worker task
 * REST API for job status polling and processed image retrieval
+* React dashboard with polling to track job states and render image gallery
 * Containerised with Docker Compose orchestrating all services
-* React dashboard (in progress)
 
 ## 🛠️ Tech Stack
 
