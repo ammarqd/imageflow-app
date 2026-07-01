@@ -1,6 +1,7 @@
 import type { Job } from '../types'
 
 const API_BASE_URL = "http://localhost:8000"
+const NGINX_BASE_URL = "http://localhost:8080"
 
 export const api = {
     uploadImages: async (files: File[]): Promise<Job[]> => {
@@ -22,6 +23,12 @@ export const api = {
         return response.json()
     },
 
+    getJobs: async (ids: number[]): Promise<Job[]> => {
+        const params = ids.map(id => `ids=${id}`).join('&')
+        const response = await fetch(`${API_BASE_URL}/jobs?${params}`)
+        return response.json()
+    },
+
     getJobStatus: async (jobId: number): Promise<Job> => {
         const response = await fetch(`${API_BASE_URL}/jobs/${jobId}`)
         if(!response.ok) {
@@ -30,7 +37,7 @@ export const api = {
         return response.json()
     },
 
-    getDownloadUrl: (jobId: number): string => {
-        return `${API_BASE_URL}/jobs/${jobId}/download`
+    getOutputUrl: (storedFilename: string): string => {
+        return `${NGINX_BASE_URL}/outputs/${storedFilename}`
     },
 }
