@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@theme {
+  /* Softened the accent green for better eye comfort */
+  --color-accent: #10b981; 
+  
+  --color-bg: #111112;
+  --color-surface: #18181b;
+  --color-border: #27272a;
+  --color-fg: #e4e4e7;
+  --color-fg-muted: #a1a1aa;
+
+  --text-caption: 0.625rem;
+  --text-label: 0.75rem;
+  --text-body: 0.875rem;
+  --text-heading: 1rem;
+
+  --radius-control: 0.75rem;
+}
