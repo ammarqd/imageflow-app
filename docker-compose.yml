@@ -51,6 +51,7 @@ services:
       - /app/.venv
       - uploads_data:/app/uploads
       - outputs_data:/app/outputs
+      - thumbnails_data:/app/thumbnails 
     env_file:
       - ./backend/.env
     depends_on:
@@ -76,9 +77,12 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - outputs_data:/app/outputs:ro
+      - uploads_data:/app/uploads:ro
+      - thumbnails_data:/app/thumbnails:ro
     depends_on:
       - api
 
 volumes:
   uploads_data:
   outputs_data:
+  thumbnails_data:

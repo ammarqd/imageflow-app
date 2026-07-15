@@ -44,7 +44,9 @@ async def upload_images(
     await db.commit()
 
     for job in jobs:
-        celery_app.send_task("tasks.process_image", args=[job.id])
+        celery_app.send_task("tasks.thumbnail_tasks.generate_thumbnail", args=[job.id])
+
+    return jobs
 
     return jobs
 

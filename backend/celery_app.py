@@ -1,5 +1,4 @@
 import os
-
 from celery import Celery
 
 REDIS_URL = os.environ["REDIS_URL"]
@@ -8,7 +7,7 @@ celery_app = Celery(
     "imageflow",
     broker=REDIS_URL,
     backend=REDIS_URL,
-    include=["tasks.processing_tasks"],
+    include=["tasks.processing_tasks", "tasks.thumbnail_tasks"],
 )
 
 celery_app.conf.update(
