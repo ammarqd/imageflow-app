@@ -8,7 +8,7 @@ celery_app = Celery(
     "imageflow",
     broker=REDIS_URL,
     backend=REDIS_URL,
-    include=["tasks"],
+    include=["tasks.processing_tasks"],
 )
 
 celery_app.conf.update(
