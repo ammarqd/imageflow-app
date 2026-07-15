@@ -2,6 +2,7 @@ import os
 import shutil
 import uuid
 
+import imagesize
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse
@@ -18,9 +19,26 @@ router = APIRouter(prefix="/jobs", tags=["jobs"])
 UPLOAD_DIR = "/app/uploads"
 
 
-def _stream_to_disk(src, dest_path: str):
+def _stream_to_disk(src, dest_path: str) -> tuple[int, int]:
     with open(dest_path, "wb") as dst:
         shutil.copyfileobj(src, dst)
+    return imagesize.get(dest_path)
+
+
+async def _handle_one_upload(file: UploadFile) -> Job:
+    extension = os.path.splitext(file.filename)[1]
+    unique_filename = f"{uuid.uuid4()}{extension}"
+    file_path = os.path.join(UPLOAD_DIR, unique_filename)
+
+    width, height = await run_in_threadpool(_stream_to_disk, file.file, file_path)
+
+    return Job(
+        original_filename=file.filename,
+        stored_filename=unique_filename,
+        status="uploaded",
+        width=width,
+        height=height,
+    )
 
 
 @router.post("/upload", response_model=list[JobOut])
